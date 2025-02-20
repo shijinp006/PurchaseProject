@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const generateInvoiceNumber = () => {
+  return `INV-${Math.floor(100000 + Math.random() * 900000)}`; // Example: INV-123456
+};
+
 const PurchaseForm = () => {
   const [purchase, setPurchase] = useState({
+    invoice_number: "",
     supplier_name: "",
     purchase_date: "",
     items: [{ item_name: "", quantity: "", unit_price: "" }],
@@ -10,7 +15,13 @@ const PurchaseForm = () => {
     status: "Pending",
   });
 
-  // Dynamically calculate total amount
+  useEffect(() => {
+    setPurchase((prev) => ({
+      ...prev,
+      invoice_number: generateInvoiceNumber(),
+    }));
+  }, []);
+
   useEffect(() => {
     const total = purchase.items.reduce(
       (sum, item) => sum + Number(item.quantity) * Number(item.unit_price),
@@ -51,6 +62,7 @@ const PurchaseForm = () => {
       await axios.post("/Admin/addpurchase", purchase);
       alert("Purchase added successfully!");
       setPurchase({
+        invoice_number: generateInvoiceNumber(), // Reset with a new invoice number
         supplier_name: "",
         purchase_date: "",
         items: [{ item_name: "", quantity: "", unit_price: "" }],
@@ -69,6 +81,16 @@ const PurchaseForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-semibold">Invoice Number</label>
+            <input
+              type="text"
+              name="invoice_number"
+              value={purchase.invoice_number}
+              readOnly
+              className="w-full p-2 border rounded bg-gray-200 cursor-not-allowed"
+            />
+          </div>
           <div>
             <label className="block font-semibold">Supplier Name</label>
             <input

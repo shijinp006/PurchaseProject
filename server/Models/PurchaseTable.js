@@ -6,6 +6,7 @@ const ensureTableExists = async () => {
          id INT AUTO_INCREMENT PRIMARY KEY,
     purchase_date DATE NOT NULL,
     supplier_name VARCHAR(255) NOT NULL,
+    invoice_number VARCHAR(255) NOT NULL,
     total_amount DECIMAL(10,2) DEFAULT 0.00,
     status ENUM('Pending', 'Completed', 'Cancelled') DEFAULT 'Pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

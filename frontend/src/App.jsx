@@ -7,6 +7,7 @@ import AdminLogin from "./pages/Admin/AdminLoginTemplete";
 import AdminDashboard from "./pages/Admin/AdminDashboard"; // Example additional page
 import PurchaseForm from "./pages/Admin/PurchaseTemplate";
 import AddItemForm from "./pages/Admin/AddItemsTemplet";
+import ViewPurchaseDetails from "./pages/Admin/ViewPurchaseDetails";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/dashboard" element={<AdminDashboard />} />
         <Route path="/purchase" element={<PurchaseForm />} />
         <Route path="/additems" element={<AddItemForm />} />
+        <Route path="/viewpurchase" element={<ViewPurchaseDetails />} />
       </Routes>
     </Router>
   );

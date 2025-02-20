@@ -6,7 +6,8 @@ const ensurePurchaseItemsTableExists = async () => {
     id INT AUTO_INCREMENT PRIMARY KEY,
     purchase_id INT NOT NULL,
     item_name VARCHAR(255) NOT NULL,
-    quantity INT NOT NULL,
+    quantity DECIMAL(10,2) NOT NULL,
+    balance_qty DECIMAL(10,2)DEFAULT 0,
     price DECIMAL(10,2) NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
    

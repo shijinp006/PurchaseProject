@@ -38,7 +38,7 @@ const AdminDashboard = () => {
             <FaShoppingCart className="mr-3" /> Create Purchase
           </Link>
           <Link
-            to="/purchase/list"
+            to="/viewpurchase"
             className="flex items-center px-6 py-3 text-lg hover:bg-blue-700 transition"
           >
             <FaClipboardList className="mr-3" /> Purchases List

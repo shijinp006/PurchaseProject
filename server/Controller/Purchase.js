@@ -10,8 +10,15 @@ export const Purchase = async (req, res) => {
   await connection.beginTransaction(); // Start transaction
 
   try {
-    const { supplier_name, purchase_date, items, total_amount, status } =
-      req.body;
+    const {
+      supplier_name,
+      purchase_date,
+      items,
+      total_amount,
+      status,
+      invoice_number,
+    } = req.body;
+    console.log(invoice_number);
 
     if (
       !supplier_name ||
@@ -26,12 +33,10 @@ export const Purchase = async (req, res) => {
         .json({ error: "All fields are required, including items" });
     }
 
-    console.log("Received Data:", req.body);
-
     // ✅ Step 1: Insert Purchase Details
     const [purchaseResult] = await connection.query(
-      "INSERT INTO Purchases (supplier_name, purchase_date, total_amount, status) VALUES (?, ?, ?, ?)",
-      [supplier_name, purchase_date, total_amount, status]
+      "INSERT INTO Purchases (supplier_name,  invoice_number, purchase_date, total_amount, status) VALUES (?, ?, ?, ?, ?)",
+      [supplier_name, invoice_number, purchase_date, total_amount, status]
     );
 
     const purchaseId = purchaseResult.insertId;
@@ -39,11 +44,12 @@ export const Purchase = async (req, res) => {
 
     // ✅ Step 2: Insert Multiple Items into PurchasesItems Table
     const insertItemsQuery =
-      "INSERT INTO PurchasesItems (purchase_id, item_name, quantity, price, total_amount) VALUES ?";
+      "INSERT INTO PurchasesItems (purchase_id, item_name, quantity,balance_qty, price, total_amount) VALUES ?";
 
     const itemsData = items.map((item) => [
       purchaseId,
       item.item_name,
+      item.quantity,
       item.quantity,
       item.unit_price,
       item.quantity * item.unit_price,
@@ -96,6 +102,43 @@ export const Purchase = async (req, res) => {
     await connection.rollback(); // Rollback transaction if any error occurs
     connection.release();
 
+    console.error("Database error:", error);
+    res
+      .status(500)
+      .json({ error: "Database operation failed", details: error.message });
+  }
+};
+
+export const getPurchaseDetails = async (req, res) => {
+  try {
+    const connection = await db.getConnection(); // Get a transaction connection
+    await connection.beginTransaction(); // Start transaction
+    const [purchaseResult] = await connection.query("SELECT * FROM Purchases");
+
+    await connection.commit(); // Commit transaction
+    connection.release(); // Release connection
+
+    res.status(200).json({ purchaseResult });
+  } catch (error) {}
+};
+
+export const getPurchaseItems = async (req, res) => {
+  try {
+    const connection = await db.getConnection(); // Get a transaction connection
+    await connection.beginTransaction(); // Start transaction
+
+    const Id = req.params.Id; // Corrected extraction of id
+    console.log(Id, "params Id");
+
+    const [purchaseItemsResult] = await connection.query(
+      "SELECT * FROM PurchasesItems WHERE purchase_id = ?",
+      [Id]
+    );
+    await connection.commit(); // Commit transaction
+    connection.release(); // Release connection
+
+    res.status(200).json({ purchaseItemsResult });
+  } catch (error) {
     console.error("Database error:", error);
     res
       .status(500)
