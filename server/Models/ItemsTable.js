@@ -5,7 +5,7 @@ const ensureTableExists = async () => {
       CREATE TABLE IF NOT EXISTS Items (
            id INT AUTO_INCREMENT PRIMARY KEY,
    item_name VARCHAR(255) NOT NULL,
-    quantity INT NOT NULL DEFAULT 0
+    quantity DECIMAL(10,2) NOT NULL DEFAULT 0
       )
     `;
 
@@ -16,5 +16,5 @@ const ensureTableExists = async () => {
     console.error("Error ensuring  Items table exists:", error.message);
   }
 };
-ensureTableExists();
+
 export default ensureTableExists;

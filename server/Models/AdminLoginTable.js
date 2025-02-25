@@ -1,4 +1,4 @@
-import { db } from "./Db.js";
+import { db } from './Db.js';
 
 const ensureTableExists = async () => {
   const createTableQuery = `
@@ -13,10 +13,10 @@ const ensureTableExists = async () => {
 
   try {
     await db.query(createTableQuery); // Now this works because db is promise-based
-    console.log("AdminLogin table is ready.");
+    console.log('AdminLogin table is ready.');
   } catch (error) {
-    console.error("Error ensuring AdminLogin table exists:", error.message);
+    console.error('Error ensuring AdminLogin table exists:', error.message);
   }
 };
-ensureTableExists();
+
 export default ensureTableExists;
